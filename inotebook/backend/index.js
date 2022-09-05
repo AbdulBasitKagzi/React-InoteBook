@@ -5,7 +5,7 @@ const mongooseToConnect = require("./db");
 const app = express();
 
 // port number
-const port = 3000;
+const port = 5000;
 
 // setting up middleware
 app.use(express.json());

@@ -2,7 +2,12 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const { body, validationResult } = require("express-validator");
+const jwt = require("jsonwebtoken");
 const User = require("../model/UserModel");
+const fetchuser = require("../middleware/fetchuser");
+
+// secret key to generate jsonwebtoken
+const secret_key = "abdulb@sit";
 
 // creating route
 const route = express.Router();
@@ -14,7 +19,7 @@ route.get("/", (req, res) => {
 
 // request to add users to database
 route.post(
-  "/api/auth",
+  "/api/auth/createuser",
   [
     body("name", "Enter a valid name").isLength({ min: 3 }),
     body("email", "Enter valid email").isEmail(),
@@ -64,12 +69,90 @@ route.post(
         email,
         password: securePass,
       });
-      return res.status(200).send(user);
+
+      const data = {
+        user: {
+          id: user.id,
+        },
+      };
+      const authToken = jwt.sign(data, secret_key);
+      console.log("authToken", authToken);
+      return res.status(200).json(authToken);
     } catch (error) {
       console.error(error.message);
       return res.status(500).send("Some error occured");
     }
   }
 );
+
+// authenticaton/login endpoint
+route.post(
+  "/api/auth/login",
+  [
+    body("email", "Enter valid email").isEmail(),
+    // password must be at least 5 chars long
+    body("password", "Password Cannot be blank").isLength({ min: 3 }),
+  ],
+  async (req, res) => {
+    // catching errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      console.log("err");
+      return res.status(400).send({
+        errors: errors
+          .array()
+          .map((err) => err.msg)
+          .join(", "),
+      });
+    }
+    // destructuring
+    const { email, password } = req.body;
+    try {
+      // finding user from database
+      const user = await User.findOne({ email });
+      console.log("user", user);
+      if (!user) {
+        return res
+          .status(400)
+          .send({ error: "Please login with correct credentials email" });
+      }
+      console.log("user is there");
+
+      // comparing passwords
+      const comparePass = await bcrypt.compare(password, user.password);
+      if (!comparePass) {
+        return res
+          .status(400)
+          .send({ error: "Please login with correct credentials Password" });
+      }
+      console.log("password is correct");
+      const data = {
+        user: {
+          id: user.id,
+        },
+      };
+
+      // creating auhtoken
+      const authToken = jwt.sign(data, secret_key);
+      return res.status(200).send({ success: authToken });
+    } catch (error) {
+      console.error(error.message);
+      return res.status(400).send("Some error occured");
+    }
+  }
+);
+
+// to check which user is logged in
+route.post("/api/auth/getuser", fetchuser, async (req, res) => {
+  try {
+    const id = req.user.id;
+    const user = await User.findById({ _id: id }).select("-password");
+    console.log("loggedin", user);
+    return res.status(200).send(user);
+  } catch (error) {
+    console.error(error.message);
+    return res.status(400).send("Some error occured");
+  }
+});
 
 module.exports = route;
