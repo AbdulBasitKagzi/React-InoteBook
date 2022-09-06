@@ -1,13 +1,18 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 function Navbar() {
+  const location = useLocation();
+
+  React.useEffect(() => {
+    console.log(location.pathname);
+  }, [location]);
   return (
     <React.Fragment>
       <nav className="navbar navbar-expand-lg bg-light">
         <div className="container-fluid">
           <Link className="navbar-brand" to="/">
-            Navbar
+            INoteBook
           </Link>
           <button
             className="navbar-toggler"
@@ -24,7 +29,9 @@ function Navbar() {
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item">
                 <Link
-                  className="nav-link active"
+                  className={`nav-link ${
+                    location.pathname === "/home" ? "active" : ""
+                  }`}
                   aria-current="page"
                   to="/home"
                 >
@@ -32,7 +39,12 @@ function Navbar() {
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to="/about">
+                <Link
+                  className={`nav-link ${
+                    location.pathname === "/about" ? "active" : ""
+                  }`}
+                  to="/about"
+                >
                   About
                 </Link>
               </li>

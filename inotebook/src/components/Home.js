@@ -1,7 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
+// import NoteContext from "./context/notes/NotesContext";
+import Notes from "./Notes";
 
 function Home() {
-  return <div>This is Home</div>;
+  // const ctx = useContext(NoteContext);
+
+  return (
+    <div>
+      <Notes />
+    </div>
+  );
 }
 
 export default Home;
