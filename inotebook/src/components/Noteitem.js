@@ -22,12 +22,20 @@ function NoteItem(props) {
               title="Delete"
             ></i>
           </span>
-          <i
-            className="fa-solid fa-pen-to-square mx-2"
-            data-toggle="tooltip"
-            data-placement="bottom"
-            title="Edit"
-          ></i>
+          <span
+            onClick={() => {
+              {
+                props.Update();
+              }
+            }}
+          >
+            <i
+              className="fa-solid fa-pen-to-square mx-2"
+              data-toggle="tooltip"
+              data-placement="bottom"
+              title="Edit"
+            ></i>
+          </span>
         </div>
       </div>
     </div>
