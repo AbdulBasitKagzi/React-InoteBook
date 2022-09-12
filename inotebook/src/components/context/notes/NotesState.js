@@ -9,7 +9,15 @@ function NotesState(props) {
 
   //   fetch all notes
   const getNotes = async () => {
-    const response = await fetch(`${host}/fetchallnotes`);
+    console.log("tokenfrom", localStorage.getItem("token"));
+    const response = await fetch(`${host}/fetchallnotes`, {
+      method: "GET",
+      headers: {
+        "content-type": "Application/Json",
+        Authorization: localStorage.getItem("token"),
+      },
+    });
+
     const data = await response.json();
     setNote(data);
   };
@@ -20,8 +28,7 @@ function NotesState(props) {
       method: "POST",
       headers: {
         "content-type": "application/json",
-        Authorization:
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjMxNTk4ZDBlZTE2YzU2MzY1MTI3YjhjIn0sImlhdCI6MTY2MjM3MzA0N30.vv9UQZpMZIIWDQPD-qfzFBuZ3axJj-E2TvEpSjnniZo",
+        Authorization: localStorage.getItem("token"),
       },
       body: JSON.stringify({ title, description, tag }),
     });
@@ -36,45 +43,46 @@ function NotesState(props) {
       method: "DELETE",
       headers: {
         "content-type": "application/json",
-        Authorization:
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjMxNTk4ZDBlZTE2YzU2MzY1MTI3YjhjIn0sImlhdCI6MTY2MjM3MzA0N30.vv9UQZpMZIIWDQPD-qfzFBuZ3axJj-E2TvEpSjnniZo",
+        Authorization: localStorage.getItem("token"),
       },
-      body: JSON.stringify(),
     });
     const data = await response.json();
     const newNote = data.filter((note) => {
       return note._id !== _id;
     });
+    console.log(newNote);
     setNote(newNote);
   };
 
   //   edit notes in the database
   const editNote = async ({ title, description, tag, id }) => {
-    const response = await fetch(`${host}/editnotes${id}`, {
-      method: "POST",
+    console.log(title, description, tag, id);
+    const response = await fetch(`${host}/updatenote/${id}`, {
+      method: "PATCH",
       headers: {
         "content-type": "application/json",
-        Authorization:
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjMxNTk4ZDBlZTE2YzU2MzY1MTI3YjhjIn0sImlhdCI6MTY2MjM3MzA0N30.vv9UQZpMZIIWDQPD-qfzFBuZ3axJj-E2TvEpSjnniZo",
+        Authorization: localStorage.getItem("token"),
       },
-      body: JSON.stringify({ title, description, tag }),
+      body: JSON.stringify({ title, description, tag, id }),
     });
-    const data = await response.json();
 
+    let newNote = JSON.parse(JSON.stringify(note));
     // logic to edit notes
-    for (let index = 0; index.length < 0; index++) {
-      const element = note[index];
+    for (let index = 0; index < newNote.length; index++) {
+      const element = newNote[index];
       if (element._id === id) {
-        element.title = title;
-        element.description = description;
-        element.tag = tag;
+        newNote[index].title = title;
+        newNote[index].description = description;
+        newNote[index].tag = tag;
+        break;
       }
     }
+    setNote(newNote);
   };
 
   return (
     <NoteContext.Provider
-      value={{ note, setNote, addNote, deleteNote, getNotes }}
+      value={{ note, setNote, addNote, deleteNote, getNotes, editNote }}
     >
       {props.children}
     </NoteContext.Provider>

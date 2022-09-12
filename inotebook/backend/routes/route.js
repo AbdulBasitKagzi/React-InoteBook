@@ -94,6 +94,7 @@ route.post(
     body("password", "Password Cannot be blank").isLength({ min: 3 }),
   ],
   async (req, res) => {
+    let success = false;
     // catching errors
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -134,7 +135,7 @@ route.post(
 
       // creating auhtoken
       const authToken = jwt.sign(data, secret_key);
-      return res.status(200).send({ success: authToken });
+      return res.status(200).send({ success: true, token: authToken });
     } catch (error) {
       console.error(error.message);
       return res.status(400).send("Some error occured");

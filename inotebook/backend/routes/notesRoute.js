@@ -7,9 +7,9 @@ const { default: mongoose } = require("mongoose");
 const routeNotes = express.Router();
 
 // get all notes request
-routeNotes.get("/fetchallnotes", async (req, res) => {
+routeNotes.get("/fetchallnotes", fetchuser, async (req, res) => {
   try {
-    const notes = await Notes.find();
+    const notes = await Notes.find({ user: req.user.id });
     if (!notes) {
       return res.status(400).send("No notes exists");
     }

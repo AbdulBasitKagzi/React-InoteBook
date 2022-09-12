@@ -9,9 +9,9 @@ const fetchuser = (req, res, next) => {
       res.status(401).send("User is not logged in");
     }
     const data = jwt.verify(token, secret_key);
-    console.log("data", data);
+    console.log("data", data.user.id);
     req.user = data.user;
-    console.log("loggedid", req.user);
+    console.log("loggedid", req.user.id);
 
     next();
   } catch (error) {

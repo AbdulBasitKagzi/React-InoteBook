@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useRef } from "react";
 import NoteContext from "./context/notes/NotesContext";
 
 function AddNote() {
@@ -40,12 +40,30 @@ function AddNote() {
   const [Note, setNote] = React.useState({
     title: "",
     description: "",
-    tag: "default",
+    tag: "",
   });
+
+  const titleRef = useRef("");
+
+  const descRef = useRef("");
+
+  const tagRef = useRef("");
 
   const handleClick = (e) => {
     e.preventDefault();
     ctx.addNote(Note);
+
+    // // TO EMPTY FIELD   AFTER SUBMISSION
+    // titleRef.current.value = "";
+    // descRef.current.value = "";
+    // tagRef.current.value = "";
+
+    // ANOTHER METHOD TO EMPTY FIELD   AFTER SUBMISSION
+    // setNote({
+    //   title: "",
+    //   description: "",
+    //   tag: "",
+    // });
   };
 
   const onChange = (e) => {
@@ -64,7 +82,9 @@ function AddNote() {
             name="title"
             className="form-control"
             id="title"
+            ref={titleRef}
             onChange={onChange}
+            value={Note.title}
           />
         </div>
         <div className="mb-3">
@@ -76,7 +96,9 @@ function AddNote() {
             name="description"
             className="form-control"
             id="desc"
+            ref={descRef}
             onChange={onChange}
+            value={Note.description}
           />
         </div>
         <div className="mb-3">
@@ -87,8 +109,10 @@ function AddNote() {
             type="text"
             name="tag"
             className="form-control"
-            id="desc"
+            id="tag"
+            ref={tagRef}
             onChange={onChange}
+            value={Note.tag}
           />
         </div>
         <button type="submit" className="btn btn-primary" onClick={handleClick}>

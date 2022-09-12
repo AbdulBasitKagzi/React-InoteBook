@@ -25,7 +25,7 @@ function NoteItem(props) {
           <span
             onClick={() => {
               {
-                props.Update();
+                props.Update(props.note);
               }
             }}
           >

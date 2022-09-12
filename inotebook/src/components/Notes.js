@@ -1,21 +1,50 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import AddNote from "./AddNote";
 import NoteContext from "./context/notes/NotesContext";
 import NoteItem from "./Noteitem";
+import { useHistory } from "react-router-dom";
 
 function Notes() {
   const ctx = useContext(NoteContext);
-  const ref = useRef(null);
-
+  const history = useHistory();
   // to fetch all notes
   useEffect(() => {
-    ctx.getNotes();
+    if (localStorage.getItem("token")) {
+      ctx.getNotes();
+    } else {
+      history.push("/login");
+    }
+    // react - hooks / exhaustive - deps;
   }, []);
 
-  const handleClick = () => {};
-  const onChange = () => {};
-  const onUpdate = () => {
+  const ref = useRef(null);
+  const closeRef = useRef(null);
+  const [enote, setNote] = useState({
+    id: "",
+    title: "",
+    description: "",
+    tag: "",
+  });
+
+  const handleClick = (e) => {
+    console.log("update", enote);
+    ctx.editNote(enote);
+    console.log(enote.id);
+    closeRef.current.click();
+  };
+
+  const onUpdate = (currentNote) => {
     ref.current.click();
+    console.log("curr", currentNote);
+    setNote({
+      id: currentNote._id,
+      title: currentNote.title,
+      tag: currentNote.tag,
+      description: currentNote.description,
+    });
+  };
+  const onChange = (e) => {
+    setNote({ ...enote, [e.target.name]: e.target.value });
   };
   return (
     <>
@@ -24,7 +53,7 @@ function Notes() {
       <div
         className="modal fade"
         id="exampleModal"
-        tabindex="-1"
+        tabIndex="-1"
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
       >
@@ -54,6 +83,8 @@ function Notes() {
                       name="title"
                       className="form-control"
                       id="title"
+                      value={enote.title}
+                      // defaultValue={enote.title}
                       onChange={onChange}
                     />
                   </div>
@@ -66,6 +97,7 @@ function Notes() {
                       name="description"
                       className="form-control"
                       id="desc"
+                      value={enote.description}
                       onChange={onChange}
                     />
                   </div>
@@ -78,16 +110,10 @@ function Notes() {
                       name="tag"
                       className="form-control"
                       id="desc"
+                      value={enote.tag}
                       onChange={onChange}
                     />
                   </div>
-                  <button
-                    type="submit"
-                    className="btn btn-primary"
-                    onClick={handleClick}
-                  >
-                    Submit
-                  </button>
                 </form>
               </div>
             </div>
@@ -96,11 +122,16 @@ function Notes() {
                 type="button"
                 className="btn btn-secondary"
                 data-bs-dismiss="modal"
+                ref={closeRef}
               >
                 Close
               </button>
-              <button type="button" className="btn btn-primary">
-                Save changes
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={handleClick}
+              >
+                Update Note
               </button>
             </div>
           </div>
@@ -119,9 +150,11 @@ function Notes() {
       </button>
       <div className="row my-3">
         <h2>Your Notes</h2>
-        {ctx.note.map((note) => {
-          return <NoteItem key={note._id} Update={onUpdate} note={note} />;
-        })}
+        {ctx.note.length !== 0
+          ? ctx.note.map((note) => {
+              return <NoteItem key={note._id} Update={onUpdate} note={note} />;
+            })
+          : "No notes found"}
       </div>
     </>
   );
