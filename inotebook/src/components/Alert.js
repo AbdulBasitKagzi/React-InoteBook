@@ -8,7 +8,7 @@ function Alert(props) {
   setTimeout(() => {
     setTime(false);
     ctx.setMessage("");
-  }, 1000);
+  }, 2000);
 
   return (
     time && (

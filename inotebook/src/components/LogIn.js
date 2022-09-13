@@ -11,6 +11,8 @@ function LogIn(props) {
 
   const ctx = useContext(NoteContext);
 
+  const API = process.env.REACT_APP_API;
+
   const handleClick = async (e) => {
     e.preventDefault();
 
@@ -19,7 +21,7 @@ function LogIn(props) {
     //   password: passwordRef.current.value,
     // });
     // TO LOGIN USER
-    const response = await fetch("http://localhost:5000/api/auth/login", {
+    const response = await fetch(`${API}/api/auth/login`, {
       method: "POST",
       headers: {
         "content-type": "Application/json",

@@ -5,9 +5,9 @@ const { body, validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 const User = require("../model/UserModel");
 const fetchuser = require("../middleware/fetchuser");
-
+require("dotenv").config({ path: "config.env" });
 // secret key to generate jsonwebtoken
-const secret_key = "abdulb@sit";
+const secret_key = process.env.SECRET_KEY;
 
 // creating route
 const route = express.Router();

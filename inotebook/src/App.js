@@ -17,6 +17,10 @@ function App(props) {
 
         <div className="container">
           <Switch>
+            <Route exact path="/">
+              <SignUp />
+            </Route>
+
             <Route exact path="/home">
               <Home />
             </Route>

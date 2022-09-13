@@ -8,11 +8,14 @@ function SignUp() {
     email: "",
     password: "",
   });
+
+  const API = process.env.REACT_APP_API;
+  
   const handleClick = async (e) => {
     e.preventDefault();
 
     // TO ADD NEW USER TO DATABASE
-    const response = await fetch("http://localhost:5000/api/auth/createuser", {
+    const response = await fetch(`${API}/api/auth/createuser`, {
       method: "POST",
       headers: {
         "content-type": "Application/json",
