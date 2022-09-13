@@ -6,13 +6,15 @@ import SignUp from "./components/SignUp";
 
 import { Route, Switch } from "react-router-dom";
 import NotesState from "./components/context/notes/NotesState";
-import Alert from "./components/Alert";
-function App() {
+// import Alert from "./components/Alert";
+// import { useContext } from "react";
+
+function App(props) {
   return (
     <>
       <NotesState>
         <Navbar />
-        <Alert />
+
         <div className="container">
           <Switch>
             <Route exact path="/home">

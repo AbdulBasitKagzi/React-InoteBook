@@ -7,9 +7,12 @@ function NotesState(props) {
   //   state to get all notes and fetch notes after deletion
   const [note, setNote] = useState([]);
 
+  // to set alert
+  const [message, setMessage] = useState("");
+
   //   fetch all notes
   const getNotes = async () => {
-    console.log("tokenfrom", localStorage.getItem("token"));
+    // console.log("tokenfrom", localStorage.getItem("token"));
     const response = await fetch(`${host}/fetchallnotes`, {
       method: "GET",
       headers: {
@@ -39,25 +42,27 @@ function NotesState(props) {
 
   //   to delete notes from database
   const deleteNote = async (_id) => {
-    const response = await fetch(`${host}/deletenotes/${_id}`, {
+    await fetch(`${host}/deletenotes/${_id}`, {
       method: "DELETE",
       headers: {
         "content-type": "application/json",
         Authorization: localStorage.getItem("token"),
       },
     });
-    const data = await response.json();
-    const newNote = data.filter((note) => {
-      return note._id !== _id;
-    });
-    console.log(newNote);
-    setNote(newNote);
+    // const data = await response.json();
+    // const newNote = data.filter((note) => {
+    //   return note._id !== _id;
+    // });
+    // console.log(newNote);
+    // setNote(newNote);
+
+    getNotes();
   };
 
   //   edit notes in the database
   const editNote = async ({ title, description, tag, id }) => {
-    console.log(title, description, tag, id);
-    const response = await fetch(`${host}/updatenote/${id}`, {
+    // console.log(title, description, tag, id);
+    await fetch(`${host}/updatenote/${id}`, {
       method: "PATCH",
       headers: {
         "content-type": "application/json",
@@ -82,7 +87,16 @@ function NotesState(props) {
 
   return (
     <NoteContext.Provider
-      value={{ note, setNote, addNote, deleteNote, getNotes, editNote }}
+      value={{
+        note,
+        setNote,
+        addNote,
+        deleteNote,
+        getNotes,
+        editNote,
+        setMessage,
+        message,
+      }}
     >
       {props.children}
     </NoteContext.Provider>

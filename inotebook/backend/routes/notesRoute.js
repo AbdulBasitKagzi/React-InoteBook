@@ -31,7 +31,7 @@ routeNotes.post(
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      console.log("err");
+      // console.log("err");
       return res.status(400).json({
         errors: errors
           .array()
@@ -41,7 +41,7 @@ routeNotes.post(
     }
     try {
       const UserId = req.user.id;
-      console.log(UserId);
+      // console.log(UserId);
       const { title, description, tag } = req.body;
       const addedNotes = await Notes.findOne({ user: UserId, title });
 
@@ -75,12 +75,12 @@ routeNotes.patch(
 
     const existingNote = await Notes.findById({ _id: id });
     //   console.log("existingNote", Object.values(existingNote));
-    console.log(req.user.id);
+    // console.log(req.user.id);
     if (!existingNote) {
       return res.status(404).send("Note doesnot exist");
     }
-    console.log(req.user.id);
-    console.log(existingNote.user.toString());
+    // console.log(req.user.id);
+    // console.log(existingNote.user.toString());
 
     if (existingNote.user.toString() !== req.user.id) {
       return res.status(401).send("Unauthorized user");
@@ -105,7 +105,7 @@ routeNotes.patch(
           new: true,
         }
       );
-      console.log(updatednote);
+      // console.log(updatednote);
       return res.status(200).send(updatednote);
     } catch (error) {
       console.error(error.messgae);

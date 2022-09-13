@@ -14,7 +14,7 @@ function Notes() {
     } else {
       history.push("/login");
     }
-    // react - hooks / exhaustive - deps;
+    // eslint-disable-next-line
   }, []);
 
   const ref = useRef(null);
@@ -27,15 +27,16 @@ function Notes() {
   });
 
   const handleClick = (e) => {
-    console.log("update", enote);
+    // console.log("update", enote);
     ctx.editNote(enote);
-    console.log(enote.id);
+    // console.log(enote.id);
+    ctx.setMessage("Note Updated");
     closeRef.current.click();
   };
 
   const onUpdate = (currentNote) => {
     ref.current.click();
-    console.log("curr", currentNote);
+    // console.log("curr", currentNote);
     setNote({
       id: currentNote._id,
       title: currentNote.title,

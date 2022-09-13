@@ -13,6 +13,7 @@ function NoteItem(props) {
           <span
             onClick={() => {
               ctx.deleteNote(props.note._id);
+              ctx.setMessage("Note Deleted");
             }}
           >
             <i
@@ -24,9 +25,7 @@ function NoteItem(props) {
           </span>
           <span
             onClick={() => {
-              {
-                props.Update(props.note);
-              }
+              props.Update(props.note);
             }}
           >
             <i

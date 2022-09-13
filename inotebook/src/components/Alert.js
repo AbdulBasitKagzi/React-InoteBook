@@ -1,10 +1,24 @@
-import React from "react";
+import React, { useContext } from "react";
+import NoteContext from "./context/notes/NotesContext";
 
-function Alert() {
+function Alert(props) {
+  const [time, setTime] = React.useState(true);
+  const ctx = useContext(NoteContext);
+
+  setTimeout(() => {
+    setTime(false);
+    ctx.setMessage("");
+  }, 1000);
+
   return (
-    <div className="alert alert-primary" role="alert">
-      A simple primary alert—check it out!
-    </div>
+    time && (
+      <div
+        className={`alert alert-${props.alertType}  alert-dismissible fade show`}
+        role="alert"
+      >
+        {props.message}
+      </div>
+    )
   );
 }
 

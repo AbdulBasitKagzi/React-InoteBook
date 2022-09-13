@@ -1,11 +1,15 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext } from "react";
 import { useHistory } from "react-router-dom";
+import Alert from "./Alert";
+import NoteContext from "./context/notes/NotesContext";
 
-function LogIn() {
+function LogIn(props) {
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
   const history = useHistory();
   const [userConfig, setUserConfig] = useState({ email: "", password: "" });
+
+  const ctx = useContext(NoteContext);
 
   const handleClick = async (e) => {
     e.preventDefault();
@@ -26,14 +30,15 @@ function LogIn() {
       }),
     });
     const data = await response.json();
-    console.log("authtoken", data.success, data.token);
+    // console.log("authtoken", data.success, data.token);
 
     if (data.success) {
       localStorage.setItem("token", data.token);
+      ctx.setMessage("User logged in");
       history.push("/home");
       return;
     }
-    alert("Enter valid daata");
+    ctx.setMessage("Enter Valid Data");
   };
 
   // TO UPDATE STATE
@@ -43,6 +48,7 @@ function LogIn() {
 
   return (
     <div>
+      {ctx.message && <Alert message={ctx.message} alertType="danger" />}
       <h2 className="container mx-5 my-5">
         Log In to use INoteBook Functionality
       </h2>

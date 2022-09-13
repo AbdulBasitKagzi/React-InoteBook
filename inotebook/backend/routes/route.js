@@ -30,7 +30,7 @@ route.post(
     // checking error for filling of user data
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      console.log("err");
+      // console.log("err");
       return res.status(400).json({
         errors: errors
           .array()
@@ -39,7 +39,7 @@ route.post(
       });
     }
 
-    console.log(req.body);
+    // console.log(req.body);
 
     // const user = User(req.body);
     // user.save();
@@ -53,7 +53,7 @@ route.post(
       { email },
       { _id: 0, password: 0, name: 0, date: 0, __v: 0 }
     );
-    console.log("adfds", userIsThere);
+    // console.log("adfds", userIsThere);
     try {
       if (userIsThere !== null) {
         if (email === userIsThere.email) {
@@ -76,7 +76,7 @@ route.post(
         },
       };
       const authToken = jwt.sign(data, secret_key);
-      console.log("authToken", authToken);
+      // console.log("authToken", authToken);
       return res.status(200).json(authToken);
     } catch (error) {
       console.error(error.message);
@@ -98,7 +98,7 @@ route.post(
     // catching errors
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      console.log("err");
+      // console.log("err");
       return res.status(400).send({
         errors: errors
           .array()
@@ -111,13 +111,13 @@ route.post(
     try {
       // finding user from database
       const user = await User.findOne({ email });
-      console.log("user", user);
+      // console.log("user", user);
       if (!user) {
         return res
           .status(400)
           .send({ error: "Please login with correct credentials email" });
       }
-      console.log("user is there");
+      // console.log("user is there");
 
       // comparing passwords
       const comparePass = await bcrypt.compare(password, user.password);
@@ -126,7 +126,7 @@ route.post(
           .status(400)
           .send({ error: "Please login with correct credentials Password" });
       }
-      console.log("password is correct");
+      // console.log("password is correct");
       const data = {
         user: {
           id: user.id,
@@ -148,7 +148,7 @@ route.post("/api/auth/getuser", fetchuser, async (req, res) => {
   try {
     const id = req.user.id;
     const user = await User.findById({ _id: id }).select("-password");
-    console.log("loggedin", user);
+    // console.log("loggedin", user);
     return res.status(200).send(user);
   } catch (error) {
     console.error(error.message);

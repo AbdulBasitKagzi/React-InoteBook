@@ -1,12 +1,16 @@
 import React from "react";
 import { Link, useLocation, useHistory } from "react-router-dom";
+import { useContext } from "react";
+import NoteContext from "./context/notes/NotesContext";
 
 function Navbar() {
   const location = useLocation();
   const history = useHistory();
+  const ctx = useContext(NoteContext);
 
   const onClickHandler = () => {
     localStorage.removeItem("token");
+    ctx.setMessage("User logged out");
     history.push("/login");
   };
   return (

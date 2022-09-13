@@ -52,7 +52,12 @@ function AddNote() {
   const handleClick = (e) => {
     e.preventDefault();
     ctx.addNote(Note);
-
+    ctx.setMessage("Note Added");
+    setNote({
+      title: "",
+      description: "",
+      tag: "",
+    });
     // // TO EMPTY FIELD   AFTER SUBMISSION
     // titleRef.current.value = "";
     // descRef.current.value = "";
